@@ -93,7 +93,7 @@ func main() {
 	// Use the environment variable for the port
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "Error" // Default port if not specified
+		port = "Port Error" // Default port if not specified
 	}
 
 	app.Listen(":" + port)
