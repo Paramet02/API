@@ -1,11 +1,12 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/jwt/v2"
 	"github.com/joho/godotenv"
-	"log"
-	"os"
 )
 
 // Book struct to hold book data
@@ -55,26 +56,26 @@ func main() {
 	}
 
 	// JWT Secret Key
-	secretKey := "secret"
+
 
 	// Initialize in-memory data
 	Menus = append(Menus, Menu{MenuId: 1, Name: "egg", Price: 20, Category: "meat diet"})
 	Orders = append(Orders, Order{OrderId: 1, Quantity: 5, Date: "22-12-2025", Status: "doing"})
 
 	// Login route
-	app.Post("/login", login(secretKey))
+	app.Post("/login", login(os.Getenv("secretKey")))
 
 	// JWT Middleware
-	app.Use(jwtware.New(jwtware.Config{
-		SigningKey: []byte(secretKey),
+	app.Use(jwtware.New(jwtware.Config{ // make Token 
+		SigningKey: []byte(os.Getenv("secretKey")),
 	}))
-
+	
 	// Middleware to extract user data from JWT
-	app.Use(extractUserFromJWT)
+	app.Use(extractUserFromJWT) // check role form JWT Middleware 
 
 	// Group routes under /book
 	MenuGroup := app.Group("/Menu")
-
+	OrdersGroup := app.Group("/Orders")
 	// Apply the isAdmin middleware only to the /book routes
 	MenuGroup.Use(isAdmin)
 
@@ -85,10 +86,10 @@ func main() {
 	MenuGroup.Put("/:id", updateMenu)
 	MenuGroup.Delete("/:id", deleteMenu)
 
-	app.Get("/Orders", getOrders)
-	app.Get("/Orders", updateOrder)
+	OrdersGroup.Get("/Orders", getOrders)
+	OrdersGroup.Get("/Orders", updateOrder)
 
-	app.Post("/upload", uploadImage)
+	OrdersGroup.Post("/upload", uploadImage)
 
 	// Use the environment variable for the port
 	port := os.Getenv("PORT")
