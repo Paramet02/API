@@ -85,10 +85,9 @@ func main() {
 	MenuGroup.Post("/", createMenu)
 	MenuGroup.Put("/:id", updateMenu)
 	MenuGroup.Delete("/:id", deleteMenu)
-
+	// Orders
 	OrdersGroup.Get("/Orders", getOrders)
 	OrdersGroup.Get("/Orders", updateOrder)
-
 	OrdersGroup.Post("/upload", uploadImage)
 
 	// Use the environment variable for the port
