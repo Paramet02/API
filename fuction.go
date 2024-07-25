@@ -98,13 +98,13 @@ func getOrders(c *fiber.Ctx) error {
 }
 
 func updateOrder(c *fiber.Ctx) error {
-	id, err := strconv.Atoi(c.Params("id"))
+	id, err := strconv.Atoi(c.Params("id")) // check error form params 
 
 	if err != nil {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
 
-	orderUpdate := new(Order)
+	orderUpdate := new(Order) // Reserve the value in the address
 	if err := c.BodyParser(orderUpdate); err != nil {
 		return c.SendStatus(fiber.StatusBadRequest)
 	}
